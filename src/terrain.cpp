@@ -1,7 +1,9 @@
+#include <iostream>
+
 #include "GL/gl.h"
 
-#include "heightmap.h"
 #include "renderer.h"
+#include "heightmap.h"
 
 class TerrainRenderer: public Renderer {
 	private:
@@ -9,13 +11,20 @@ class TerrainRenderer: public Renderer {
 
 		void draw_triangle(int x, int y, bool fwd);
 		void draw_point(int x, int y);
-		virtual void set_color(float h) = 0;
+		void set_color(float h);
+
+		float x_step;
+		float y_step;
 
 	public:
-		void draw();
+		TerrainRenderer(Heightmap *heightmap): heightmap(heightmap) {
+			x_step = 2.f / (heightmap->get_width()-1);
+			y_step = 2.f / (heightmap->get_height()-1);
+		};
+		void draw_targets() override;
 };
 
-void max3(float a, float b, float c)
+float max3(float a, float b, float c)
 {
 	if (a > b) {
 		return (a > c) ? a : c;	
@@ -26,24 +35,30 @@ void max3(float a, float b, float c)
 
 void TerrainRenderer::draw_point(int x, int y) {
 
+	float X = -1 + x_step*x;
+	float Y = -1 + y_step*y;
+	float Z = heightmap->sample(x,y);
+
+	glVertex3f(X, Y, Z);
 }
 
 void TerrainRenderer::draw_triangle(int x, int y, bool fwd) {
+
 	if (fwd) {
 		set_color(max3(
-			heightmap->sample(x,y);
-			heightmap->sample(x,y+1);
-			heightmap->sample(x+1,y);
+			heightmap->sample(x,y),
+			heightmap->sample(x,y+1),
+			heightmap->sample(x+1,y)
 		));
-
+		
 		draw_point(x, y);
 		draw_point(x, y+1);
 		draw_point(x+1, y);
 	} else {
 		set_color(max3(
-			heightmap->sample(x,y);
-			heightmap->sample(x+1,y);
-			heightmap->sample(x+1,y-1);
+			heightmap->sample(x,y),
+			heightmap->sample(x+1,y),
+			heightmap->sample(x+1,y-1)
 		));
 
 		draw_point(x, y);
@@ -52,13 +67,11 @@ void TerrainRenderer::draw_triangle(int x, int y, bool fwd) {
 	}
 }
 
-class IslandRenderer: public TerrainRenderer {
-	private:
-		void set_color(float h);
-};
+void TerrainRenderer::draw_targets() {
 
-void TerrainRenderer::draw() {
-	for (int i=0; i<heightmap->get_width-1(); i++) {
+	glBegin(GL_TRIANGLES);
+
+	for (int i=0; i<heightmap->get_width()-1; i++) {
 		for (int j=0; j<heightmap->get_height()-1; j++) {
 			draw_triangle(i,j,true);
 		}
@@ -69,10 +82,12 @@ void TerrainRenderer::draw() {
 			draw_triangle(i,j,false);
 		}
 	}
+	glEnd();
 }
 
-class IslandRenderer: public TerrainRenderer() {
+void TerrainRenderer::set_color(float h) {
 
+	glColor3f(h, h, h);
 }
  
 class Terrain {
@@ -81,6 +96,13 @@ class Terrain {
 		TerrainRenderer *renderer;
 	
 	public:
+		Terrain();
+
 		Heightmap *get_heightmap() {return heightmap;}
 		TerrainRenderer *get_renderer() {return renderer;}
 };
+
+Terrain::Terrain(){
+	heightmap = new Heightmap(129, 129);
+	renderer = new TerrainRenderer(heightmap);
+}

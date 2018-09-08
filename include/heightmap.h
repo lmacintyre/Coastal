@@ -1,6 +1,8 @@
 #ifndef __HEIGHTMAP_H__
 #define __HEIGHTMAP_H__
 
+#include <iostream>
+
 /**
  *	Heightmap:
  *	A class used to model a field of points representing terrain.
@@ -18,7 +20,12 @@ class Heightmap {
 		float *values;
 
 	public:
-		Heightmap(int w, int h): width(w), height(h) {}
+		Heightmap(int w, int h): width(w), height(h) {
+			int wh = w*h;
+			values = new float[wh];
+			for (int i=0; i<wh; i++)
+				values[i] = i*1.f/wh;
+		};
 
 		int get_width() {return width;}
 		int get_height() {return height;}

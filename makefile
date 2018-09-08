@@ -1,5 +1,5 @@
 
-CC = gcc
+CC = g++
 FLAGS = -I include
 LINKS = -lSDL2 -lGL
 
@@ -12,6 +12,9 @@ renderer.o: src/renderer.cpp include/renderer.h
 viewer.o: src/viewer.cpp
 	$(CC) $(FLAGS) $(LINKS) -c -o bin/viewer.o src/viewer.cpp
 
-all: heightmap.o renderer.o viewer.o
-	$(CC) $(FLAGS) $(LINKS) -o bin/Coastal bin/*.o
+terrain.o: src/terrain.cpp include/terrain.h
+	$(CC) $(FLAGS) $(LINKS) -c -o bin/terrain.o src/terrain.cpp
+
+all: heightmap.o renderer.o terrain.o viewer.o
+	$(CC) $(LINKS) -o bin/Coastal bin/*.o
 
