@@ -12,7 +12,8 @@ SDL_Window *window;
 
 SDL_Event event;
 
-Terrain *terrain;
+Terrain *terrain_a;
+Terrain *terrain_b;
 
 bool quit = false;
 long last_tick;
@@ -43,10 +44,13 @@ bool init_GL() {
 	}
 
 	glClearColor(0x00, 0x00, 0x00, 0x00);
-
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glDepthFunc(GL_LESS);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-1.f, 1.f, 1.f, -1.f, -1.f, 1.f);
+	glOrtho(-1.f, 1.f, -1.f, 1.f, 2.f, -2.f);
 	
 	return true;
 }
@@ -56,9 +60,23 @@ void render() {
 	glPushMatrix();
 	
 	glScalef(0.5f, 0.5f, 0.5f);
-	glRotatef(45, 1.f, 0.f, 1.f);
+	glRotatef(45.0, 1.f, 0.f, 0.f);
+	glRotatef(a, 0.f, 0.f, 1.f);
+	a += 0.5;
 
-	terrain->get_renderer()->draw_targets();
+	terrain_a->get_renderer()->draw_targets();
+
+	glColor4f(0.f, 0.3f, 0.8f, 0.5f);
+	glBegin(GL_QUADS);
+	glVertex3f(-1.f, -1.f, 0.f);
+	glVertex3f(1.f, -1.f, 0.f);
+	glVertex3f(1.f, 1.f, 0.f);
+	glVertex3f(-1.f, 1.f, 0.f);
+	glEnd();
+
+	glTranslatef(-2.f, 0.f, 0.f);
+
+	terrain_b->get_renderer()->draw_targets();
 
 	glPopMatrix();
 	SDL_GL_SwapWindow(window);
@@ -96,7 +114,8 @@ int main(int argc, char* argv[]) {
 		return 2;
 	}
 
-	terrain = new Terrain();
+	terrain_a = new Terrain();
+	terrain_b = new Terrain();
 
 	while(!quit) {
 
@@ -108,7 +127,8 @@ int main(int argc, char* argv[]) {
 		poll_events();
 	}
 
-	delete(terrain);
+	delete(terrain_a);
+	delete(terrain_b);
 
 	return 0;
 }

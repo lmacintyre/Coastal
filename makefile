@@ -15,6 +15,9 @@ viewer.o: src/viewer.cpp
 terrain.o: src/terrain.cpp include/terrain.h
 	$(CC) $(FLAGS) $(LINKS) -c -o bin/terrain.o src/terrain.cpp
 
-all: heightmap.o renderer.o terrain.o viewer.o
+squarediamond.o: src/squarediamond.cpp include/squarediamond.h
+	$(CC) $(FLAGS) $(LINKS) -c -o bin/squarediamond.o src/squarediamond.cpp
+
+all: heightmap.o renderer.o terrain.o viewer.o squarediamond.o
 	$(CC) $(LINKS) -o bin/Coastal bin/*.o
 

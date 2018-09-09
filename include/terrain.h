@@ -34,4 +34,6 @@ class Terrain {
 		TerrainRenderer *get_renderer() {return renderer;}
 };
 
+void square_diamond(Heightmap*);
+
 #endif

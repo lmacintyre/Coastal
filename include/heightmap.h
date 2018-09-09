@@ -2,6 +2,8 @@
 #define __HEIGHTMAP_H__
 
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
 /**
  *	Heightmap:
@@ -23,8 +25,9 @@ class Heightmap {
 		Heightmap(int w, int h): width(w), height(h) {
 			int wh = w*h;
 			values = new float[wh];
-			for (int i=0; i<wh; i++)
-				values[i] = i*1.f/wh;
+
+			for (int i=0; i<wh; i++) 
+				values[i] = 0.f;
 		};
 
 		int get_width() {return width;}

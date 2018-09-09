@@ -1,9 +1,12 @@
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
 #include "GL/gl.h"
 
 #include "renderer.h"
 #include "heightmap.h"
+#include "squarediamond.h"
 
 class TerrainRenderer: public Renderer {
 	private:
@@ -87,7 +90,10 @@ void TerrainRenderer::draw_targets() {
 
 void TerrainRenderer::set_color(float h) {
 
-	glColor3f(h, h, h);
+	if (h < -0.08)
+		glColor4f(0.1f + (h/8), 0.5f + (h/3), 0.04 + (h/2), 1.f);
+	else
+		glColor4f(0.5f + (h/8), 0.5f + (h/5), 0.2f + (h/3), 1.f);
 }
  
 class Terrain {
@@ -102,7 +108,13 @@ class Terrain {
 		TerrainRenderer *get_renderer() {return renderer;}
 };
 
+void square_diamond(Heightmap*, int, float);
+
 Terrain::Terrain(){
-	heightmap = new Heightmap(129, 129);
+	heightmap = new Heightmap(65, 65);
 	renderer = new TerrainRenderer(heightmap);
+
+	square_diamond(heightmap, 32, 0.5f);
 }
+
+
