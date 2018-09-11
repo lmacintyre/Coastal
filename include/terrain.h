@@ -8,12 +8,12 @@ class TerrainRenderer: public Renderer {
 	private:
 		Heightmap *heightmap;
 
+		float x_step;
+		float y_step;
+
 		void draw_triangle(int x, int y, bool fwd);
 		void draw_point(int x, int y);
 		void set_color(float h);
-
-		float x_step;
-		float y_step;
 
 	public:
 		TerrainRenderer(Heightmap *heightmap): heightmap(heightmap) {
@@ -27,13 +27,13 @@ class Terrain {
 	private:
 		Heightmap *heightmap;
 		TerrainRenderer *renderer;
+		short chunk_number;
 	
 	public:
 		Terrain();
+		Terrain(short chunk_number);
 		Heightmap *get_heightmap() {return heightmap;}
 		TerrainRenderer *get_renderer() {return renderer;}
 };
-
-void square_diamond(Heightmap*);
 
 #endif

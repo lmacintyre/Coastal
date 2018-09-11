@@ -1,6 +1,7 @@
 #include "SDL2/SDL.h"
 #include "GL/gl.h"
 
+#include "world.h"
 #include "terrain.h"
 
 const char* WINDOW_TITLE = "Coastal";
@@ -12,8 +13,7 @@ SDL_Window *window;
 
 SDL_Event event;
 
-Terrain *terrain_a;
-Terrain *terrain_b;
+World *world;
 
 bool quit = false;
 long last_tick;
@@ -59,24 +59,62 @@ void render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glPushMatrix();
 	
-	glScalef(0.5f, 0.5f, 0.5f);
+	glScalef(0.25f, 0.25f, 0.25f);
 	glRotatef(45.0, 1.f, 0.f, 0.f);
 	glRotatef(a, 0.f, 0.f, 1.f);
 	a += 0.5;
 
-	terrain_a->get_renderer()->draw_targets();
+	glPushMatrix();
+	glTranslatef(-3.f, -3.f, 0.f);
+	world->get_chunk(0)->get_renderer()->draw_targets();
+	glTranslatef(2.f, 0.f, 0.f);
+	world->get_chunk(1)->get_renderer()->draw_targets();
+	glTranslatef(2.f, 0.f, 0.f);
+	world->get_chunk(2)->get_renderer()->draw_targets();
+	glTranslatef(2.f, 0.f, 0.f);
+	world->get_chunk(3)->get_renderer()->draw_targets();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-3.f, -1.f, 0.f);
+	world->get_chunk(4)->get_renderer()->draw_targets();
+	glTranslatef(2.f, 0.f, 0.f);
+	world->get_chunk(5)->get_renderer()->draw_targets();
+	glTranslatef(2.f, 0.f, 0.f);
+	world->get_chunk(6)->get_renderer()->draw_targets();
+	glTranslatef(2.f, 0.f, 0.f);
+	world->get_chunk(7)->get_renderer()->draw_targets();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-3.f, 1.f, 0.f);
+	world->get_chunk(8)->get_renderer()->draw_targets();
+	glTranslatef(2.f, 0.f, 0.f);
+	world->get_chunk(9)->get_renderer()->draw_targets();
+	glTranslatef(2.f, 0.f, 0.f);
+	world->get_chunk(10)->get_renderer()->draw_targets();
+	glTranslatef(2.f, 0.f, 0.f);
+	world->get_chunk(11)->get_renderer()->draw_targets();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-3.f, 3.f, 0.f);
+	world->get_chunk(12)->get_renderer()->draw_targets();
+	glTranslatef(2.f, 0.f, 0.f);
+	world->get_chunk(13)->get_renderer()->draw_targets();
+	glTranslatef(2.f, 0.f, 0.f);
+	world->get_chunk(14)->get_renderer()->draw_targets();
+	glTranslatef(2.f, 0.f, 0.f);
+	world->get_chunk(15)->get_renderer()->draw_targets();
+	glPopMatrix();
 
 	glColor4f(0.f, 0.3f, 0.8f, 0.5f);
 	glBegin(GL_QUADS);
-	glVertex3f(-1.f, -1.f, 0.f);
-	glVertex3f(1.f, -1.f, 0.f);
-	glVertex3f(1.f, 1.f, 0.f);
-	glVertex3f(-1.f, 1.f, 0.f);
+	glVertex3f(-4.f, -4.f, 0.f);
+	glVertex3f(-4.f, 4.f, 0.f);
+	glVertex3f(4.f, 4.f, 0.f);
+	glVertex3f(4.f, -4.f, 0.f);
 	glEnd();
-
-	glTranslatef(-2.f, 0.f, 0.f);
-
-	terrain_b->get_renderer()->draw_targets();
 
 	glPopMatrix();
 	SDL_GL_SwapWindow(window);
@@ -114,8 +152,7 @@ int main(int argc, char* argv[]) {
 		return 2;
 	}
 
-	terrain_a = new Terrain();
-	terrain_b = new Terrain();
+	world = new World();
 
 	while(!quit) {
 
@@ -127,8 +164,7 @@ int main(int argc, char* argv[]) {
 		poll_events();
 	}
 
-	delete(terrain_a);
-	delete(terrain_b);
+	delete(world);
 
 	return 0;
 }

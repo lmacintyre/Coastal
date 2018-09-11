@@ -1,6 +1,10 @@
+#include <iostream>
+
 #include "SDL2/SDL.h"
+#include "noise/noise.h"
 
 #include "heightmap.h"
+#include "worldparams.h"
 
 #define RAND_MAX_HALF RAND_MAX / 2
 
@@ -32,8 +36,17 @@ void diamond_step(Heightmap *heightmap, int x, int y, int step_size, float value
 	heightmap->put(x, y, ((a+b+c+d)/4.f) + value);
 }
 
-void square_diamond(Heightmap *heightmap, int stepsize, float scale) {
+float get_noise(noise::module::Perlin p, int x, int y, int c) {
+	float nx = c % (WORLD_WIDTH) + static_cast<float> (x) / (CHUNK_SIZE-1);
+	float ny = c / (WORLD_WIDTH) + static_cast<float> (y) / (CHUNK_SIZE-1);
+
+	return p.GetValue(nx, ny, 0.f);
+}
+
+void square_diamond(Heightmap *heightmap, int chunk, int stepsize, float scale) {
 	
+	noise::module::Perlin noise;
+
 	int width = heightmap->get_width();
 	int height = heightmap->get_height();
 
@@ -45,28 +58,33 @@ void square_diamond(Heightmap *heightmap, int stepsize, float scale) {
 
 	// Seed map
 	srand(SDL_GetTicks());
-	for (int i = 0; i < width; i += stepsize)
-		for (int j = 0; j < height; j += stepsize)
-			heightmap->put(i, j, randf());
+	for (int i = 0; i < width; i += 1)//stepsize)
+		for (int j = 0; j < height; j += 1)//stepsize)
+			heightmap->put(i, j, get_noise(noise, i, j, chunk));
 
 	// Generate terrain
+/*	
 	while (stepsize > 1) {
 		int halfstep = stepsize / 2;
 
 		for (int y = halfstep; y < height + halfstep; y += stepsize) {
 			for (int x = halfstep; x < width + halfstep; x += stepsize) {
-				square_step(heightmap, x, y, stepsize, randf() * scale);
+				square_step(heightmap, x, y, stepsize,
+							   get_noise(noise, x, y, chunk) * scale);
 			}
 		}
 
 		for (int y = 0; y < height; y += stepsize) {
 			for (int x = 0; x < width; x += stepsize) {
-				diamond_step(heightmap, x + halfstep, y, stepsize, randf() * scale);
-				diamond_step(heightmap, x, y + halfstep, stepsize, randf() * scale);
+				diamond_step(heightmap, x + halfstep, y, stepsize,
+							   get_noise(noise, x, y, chunk) * scale);
+				diamond_step(heightmap, x, y + halfstep, stepsize,
+							   get_noise(noise, x, y, chunk) * scale);
 			}
 		}
 
 		stepsize /= 2;
 		scale /= 2.f;
 	}
+*/
 }

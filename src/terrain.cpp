@@ -7,17 +7,18 @@
 #include "renderer.h"
 #include "heightmap.h"
 #include "squarediamond.h"
+#include "worldparams.h"
 
 class TerrainRenderer: public Renderer {
 	private:
 		Heightmap *heightmap;
 
+		float x_step;
+		float y_step;
+
 		void draw_triangle(int x, int y, bool fwd);
 		void draw_point(int x, int y);
 		void set_color(float h);
-
-		float x_step;
-		float y_step;
 
 	public:
 		TerrainRenderer(Heightmap *heightmap): heightmap(heightmap) {
@@ -41,7 +42,7 @@ void TerrainRenderer::draw_point(int x, int y) {
 	float X = -1 + x_step*x;
 	float Y = -1 + y_step*y;
 	float Z = heightmap->sample(x,y);
-
+	
 	glVertex3f(X, Y, Z);
 }
 
@@ -100,21 +101,27 @@ class Terrain {
 	private:
 		Heightmap *heightmap;
 		TerrainRenderer *renderer;
+		short chunk_number;
 	
 	public:
 		Terrain();
-
+		Terrain(short chunk_number);
 		Heightmap *get_heightmap() {return heightmap;}
 		TerrainRenderer *get_renderer() {return renderer;}
 };
 
 void square_diamond(Heightmap*, int, float);
 
-Terrain::Terrain(){
-	heightmap = new Heightmap(65, 65);
-	renderer = new TerrainRenderer(heightmap);
-
-	square_diamond(heightmap, 32, 0.5f);
+Terrain::Terrain() {
+	heightmap = NULL;
+	renderer = NULL;
+	chunk_number = -1;
 }
 
+Terrain::Terrain(short chunk_number){
+	heightmap = new Heightmap(CHUNK_SIZE, CHUNK_SIZE);
+	renderer = new TerrainRenderer(heightmap);
 
+	this->chunk_number = chunk_number;
+	square_diamond(heightmap, chunk_number, (CHUNK_SIZE-1)/2, 0.5f);
+}
