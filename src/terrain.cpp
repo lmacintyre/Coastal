@@ -123,5 +123,5 @@ Terrain::Terrain(short chunk_number){
 	renderer = new TerrainRenderer(heightmap);
 
 	this->chunk_number = chunk_number;
-	square_diamond(heightmap, chunk_number, (CHUNK_SIZE-1)/2, 0.5f);
+	square_diamond(heightmap, chunk_number, (CHUNK_SIZE-1)/4, 0.5f);
 }

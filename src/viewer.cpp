@@ -107,7 +107,7 @@ void render() {
 	glTranslatef(2.f, 0.f, 0.f);
 	world->get_chunk(15)->get_renderer()->draw_targets();
 	glPopMatrix();
-
+/*
 	glColor4f(0.f, 0.3f, 0.8f, 0.5f);
 	glBegin(GL_QUADS);
 	glVertex3f(-4.f, -4.f, 0.f);
@@ -115,7 +115,7 @@ void render() {
 	glVertex3f(4.f, 4.f, 0.f);
 	glVertex3f(4.f, -4.f, 0.f);
 	glEnd();
-
+*/
 	glPopMatrix();
 	SDL_GL_SwapWindow(window);
 }
