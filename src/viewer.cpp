@@ -59,7 +59,7 @@ void render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glPushMatrix();
 	
-	glScalef(0.25f, 0.25f, 0.25f);
+	glScalef(0.5f, 0.5f, 0.5f);
 	glRotatef(45.0, 1.f, 0.f, 0.f);
 	glRotatef(a, 0.f, 0.f, 1.f);
 	a += 0.5;
@@ -107,7 +107,7 @@ void render() {
 	glTranslatef(2.f, 0.f, 0.f);
 	world->get_chunk(15)->get_renderer()->draw_targets();
 	glPopMatrix();
-/*
+
 	glColor4f(0.f, 0.3f, 0.8f, 0.5f);
 	glBegin(GL_QUADS);
 	glVertex3f(-4.f, -4.f, 0.f);
@@ -115,7 +115,7 @@ void render() {
 	glVertex3f(4.f, 4.f, 0.f);
 	glVertex3f(4.f, -4.f, 0.f);
 	glEnd();
-*/
+
 	glPopMatrix();
 	SDL_GL_SwapWindow(window);
 }

@@ -30,10 +30,10 @@ class TerrainRenderer: public Renderer {
 
 float max3(float a, float b, float c)
 {
-	if (a > b) {
-		return (a > c) ? a : c;	
+	if (a < b) {
+		return (a < c) ? a : c;	
 	} else {
-		return (b > c) ? b : c;
+		return (b < c) ? b : c;
 	}
 }
 

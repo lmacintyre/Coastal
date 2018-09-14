@@ -42,7 +42,7 @@ class Heightmap {
  */
 float Heightmap::sample(int x, int y)
 {
-	return values[(x % (width)) + (y % (height)) * width];
+	return values[(x%width) + (y%height) * width];
 }
 
 /**
@@ -55,5 +55,5 @@ float Heightmap::sample(int x, int y)
  */
 void Heightmap::put(int x, int y, float v)
 {
-	values[(x % (width)) + (y % (height)) * width] = v;
+	values[(x%width) + (y%height) * width] = v;
 }

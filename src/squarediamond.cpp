@@ -17,11 +17,11 @@ void square_step(Heightmap *heightmap, int x, int y, int step_size, float value)
 	int hs = step_size / 2;
 
 	double a = heightmap->sample(x, y);
-	double b = heightmap->sample(x + hs, y);
-	double c = heightmap->sample(x + hs, y + hs);
-	double d = heightmap->sample(x, y + hs);
+	double b = heightmap->sample(x + step_size, y);
+	double c = heightmap->sample(x + step_size, y + step_size);
+	double d = heightmap->sample(x, y + step_size);
 
-	heightmap->put(x + (step_size/2), y + (step_size/2), ((a+b+c+d)/4.f) + value);
+	heightmap->put(x + hs, y + hs, ((a+b+c+d)/4.f) + value);
 }
 
 void diamond_step(Heightmap *heightmap, int x, int y, int step_size, float value) {
@@ -58,12 +58,12 @@ void square_diamond(Heightmap *heightmap, int chunk, int stepsize, float scale) 
 
 	// Seed map
 	srand(SDL_GetTicks());
-	for (int i = 0; i < width; i += stepsize)
-		for (int j = 0; j < height; j += stepsize)
+	for (int i = 0; i < width; i += 1)//stepsize)
+		for (int j = 0; j < height; j += 1)//stepsize)
 			heightmap->put(i, j, get_noise(noise, i, j, chunk));
 
 	// Generate terrain
-	
+/*
 	while (stepsize > 1) {
 		int halfstep = stepsize / 2;
 
@@ -74,8 +74,8 @@ void square_diamond(Heightmap *heightmap, int chunk, int stepsize, float scale) 
 			}
 		}
 
-		for (int x = 0; y < width-1; x += halfstep) {
-			for (int y = (x + halfstep)%stepsize; x < width-1; x += stepsize) {
+		for (int x = 0; x < width-1; x += stepsize) {
+			for (int y = 0; y < height-1; y += stepsize) {
 				diamond_step(heightmap, x + halfstep, y, stepsize,
 							   get_noise(noise, x, y, chunk) * scale);
 				diamond_step(heightmap, x, y + halfstep, stepsize,
@@ -86,5 +86,5 @@ void square_diamond(Heightmap *heightmap, int chunk, int stepsize, float scale) 
 		stepsize /= 2;
 		scale /= 2.f;
 	}
-	
+*/
 }
